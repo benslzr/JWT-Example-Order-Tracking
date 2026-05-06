@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { randomBytes, createHash } from 'node:crypto';
 import { signLocalJwt } from '../auth/localJwt.js';
 import { authenticate } from '../auth/guards.js';
+import { toRole } from '../auth/roles.js';
 
 const pkceStore = new Map<string, { verifier: string; createdAt: number }>();
 
@@ -17,8 +18,9 @@ export async function authRoutes(app: FastifyInstance) {
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return reply.code(401).send({ error: 'Invalid username or password' });
     }
-    const token = signLocalJwt(app, user);
-    return { token, user: { id: user.id, username: user.username, role: user.role } };
+    const role = toRole(user.role);
+    const token = signLocalJwt(app, { id: user.id, username: user.username, role });
+    return { token, user: { id: user.id, username: user.username, role } };
   });
 
   app.post('/local/logout', async () => ({ ok: true, note: 'JWT logout is client-side in this demo. Production apps often use secure cookies/sessions.' }));

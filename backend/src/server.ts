@@ -10,6 +10,7 @@ import { settingsRoutes } from './routes/settings.js';
 import { orderRoutes } from './routes/orders.js';
 import { demoRoutes } from './routes/demo.js';
 import { userRoutes } from './routes/users.js';
+import { externalUserRoutes } from './routes/externalUsers.js';
 import './auth/types.js';
 
 const app = Fastify({ logger: true });
@@ -25,6 +26,7 @@ await app.register(authRoutes, { prefix: '/api/auth' });
 await app.register(settingsRoutes, { prefix: '/api/settings' });
 await app.register(orderRoutes, { prefix: '/api/orders' });
 await app.register(userRoutes, { prefix: '/api/users' });
+await app.register(externalUserRoutes, { prefix: '/api/external-users' });
 await app.register(demoRoutes, { prefix: '/api/demo' });
 
 const port = Number(process.env.PORT ?? 4000);

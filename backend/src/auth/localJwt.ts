@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { Role } from '@prisma/client';
+import type { Role } from './roles.js';
 
 const expiresIn = '2h';
 

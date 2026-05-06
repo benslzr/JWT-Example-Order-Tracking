@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import bcrypt from 'bcrypt';
-import { PrismaClient, Role, OrderStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -11,8 +11,8 @@ async function main() {
 
   const admin = await prisma.localUser.upsert({
     where: { username },
-    update: { passwordHash, role: Role.ADMIN },
-    create: { username, email: 'admin@example.test', passwordHash, role: Role.ADMIN }
+    update: { passwordHash, role: 'ADMIN' },
+    create: { username, email: 'admin@example.test', passwordHash, role: 'ADMIN' }
   });
 
   await prisma.oidcSettings.upsert({
@@ -50,7 +50,7 @@ async function main() {
           customerName: 'Ada Lovelace',
           customerEmail: 'ada@example.test',
           websitePackage: 'Starter Website',
-          status: OrderStatus.NEW,
+          status: 'NEW',
           description: 'Five-page brochure site with contact form.',
           assignedUserId: admin.id
         },
@@ -58,7 +58,7 @@ async function main() {
           customerName: 'Grace Hopper',
           customerEmail: 'grace@example.test',
           websitePackage: 'E-commerce Launch',
-          status: OrderStatus.IN_PROGRESS,
+          status: 'IN_PROGRESS',
           description: 'Small storefront with product catalog and checkout.',
           assignedUserId: admin.id
         }

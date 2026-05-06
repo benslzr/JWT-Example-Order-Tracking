@@ -7,6 +7,7 @@ type AuthContextValue = {
   user?: User;
   token?: string;
   idToken?: string;
+  loading: boolean;
   loginLocal: (username: string, password: string) => Promise<void>;
   loginKeycloak: () => void;
   logout: () => void;
@@ -24,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(() => localStorage.getItem('access_token') ?? undefined);
   const [idToken, setIdToken] = useState(() => localStorage.getItem('id_token') ?? undefined);
   const [user, setUser] = useState<User | undefined>();
+  const [loading, setLoading] = useState(true);
 
   async function refreshMe() {
     const storedAccessToken = localStorage.getItem('access_token') ?? undefined;
@@ -56,9 +58,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(undefined);
   }
 
-  useEffect(() => { refreshMe().catch(() => logout()); }, [token]);
+  useEffect(() => { refreshMe().catch(() => logout()).finally(() => setLoading(false)); }, [token]);
 
-  const value = useMemo(() => ({ user, token, idToken, loginLocal, loginKeycloak, logout, refreshMe }), [user, token, idToken]);
+  const value = useMemo(() => ({ user, token, idToken, loading, loginLocal, loginKeycloak, logout, refreshMe }), [user, token, idToken, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

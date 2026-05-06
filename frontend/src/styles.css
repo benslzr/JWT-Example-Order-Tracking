@@ -2,6 +2,7 @@
 body { margin: 0; }
 a { color: #0f766e; text-decoration: none; font-weight: 650; }
 button, .button { align-items: center; background: #0f766e; border: 0; border-radius: 6px; color: white; cursor: pointer; display: inline-flex; gap: 8px; font-weight: 700; margin: 6px 8px 6px 0; padding: 10px 14px; }
+button.danger { background: #b91c1c; }
 input, select, textarea { border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font: inherit; padding: 10px; width: 100%; }
 textarea { min-height: 110px; }
 pre { background: #111827; border-radius: 6px; color: #d1fae5; overflow: auto; padding: 14px; white-space: pre-wrap; }

@@ -7,30 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  USER
-  VIEWER
-}
-
-enum OrderStatus {
-  NEW
-  IN_PROGRESS
-  WAITING_ON_CUSTOMER
-  COMPLETED
-  CANCELLED
-}
-
 model LocalUser {
   id           String          @id @default(cuid())
   username     String          @unique
   email        String?
   passwordHash String
-  role         Role            @default(VIEWER)
+  role         String          @default("VIEWER")
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   assigned     CustomerOrder[] @relation("AssignedOrders")
   notes        OrderNote[]
+}
+
+model ExternalUser {
+  id                String   @id @default(cuid())
+  provider          String   @default("keycloak")
+  issuer            String
+  subject           String
+  username          String?
+  email             String?
+  displayName       String?
+  role              String   @default("VIEWER")
+  lastLoginAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([issuer, subject])
 }
 
 model OidcSettings {
@@ -64,10 +66,10 @@ model CustomerOrder {
   customerName   String
   customerEmail  String
   websitePackage String
-  status         OrderStatus @default(NEW)
+  status         String        @default("NEW")
   description    String
   assignedUserId String?
-  assignedUser   LocalUser?  @relation("AssignedOrders", fields: [assignedUserId], references: [id])
+  assignedUser   LocalUser?  @relation("AssignedOrders", fields: [assignedUserId], references: [id], onDelete: SetNull)
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   notes          OrderNote[]
@@ -79,7 +81,7 @@ model OrderNote {
   orderId   String
   order     CustomerOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
   authorId  String?
-  author    LocalUser?    @relation(fields: [authorId], references: [id])
+  author    LocalUser?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
   body      String
   createdAt DateTime      @default(now())
 }

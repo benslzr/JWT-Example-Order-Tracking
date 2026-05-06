@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import type { Role } from '@prisma/client';
 import { verifyKeycloakJwt } from './oidcJwt.js';
+import type { Role } from './roles.js';
+import { toRole } from './roles.js';
 
 const rank: Record<Role, number> = { VIEWER: 1, USER: 2, ADMIN: 3 };
 
@@ -15,11 +16,11 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
      * validated with OIDC issuer metadata and JWKS. Keeping those paths separate
      * is the point of this learning app.
      */
-    const decoded = await request.server.jwt.verify<{ sub: string; username: string; role: Role; method: string; exp?: number }>(token);
+    const decoded = await request.server.jwt.verify<{ sub: string; username: string; role: string; method: string; exp?: number }>(token);
     request.authUser = {
       sub: decoded.sub,
       username: decoded.username,
-      role: decoded.role,
+      role: toRole(decoded.role),
       method: 'local',
       exp: decoded.exp
     };

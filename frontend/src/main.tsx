@@ -14,6 +14,8 @@ import { OidcSettings } from './pages/OidcSettings';
 import { SmtpSettings } from './pages/SmtpSettings';
 import { LearningLab } from './pages/LearningLab';
 import { Users } from './pages/Users';
+import { ExternalUsers } from './pages/ExternalUsers';
+import { RequireRole } from './components/RequireRole';
 import './styles.css';
 
 const router = createBrowserRouter([
@@ -22,15 +24,16 @@ const router = createBrowserRouter([
     { path: 'login', element: <Login /> },
     { path: 'admin-login', element: <Login /> },
     { path: 'oidc/callback', element: <OidcCallback /> },
-    { path: 'dashboard', element: <Dashboard /> },
-    { path: 'orders', element: <Orders /> },
-    { path: 'orders/new', element: <OrderForm /> },
-    { path: 'orders/:id', element: <OrderDetail /> },
-    { path: 'orders/:id/edit', element: <OrderForm /> },
-    { path: 'settings/oidc', element: <OidcSettings /> },
-    { path: 'settings/smtp', element: <SmtpSettings /> },
-    { path: 'users', element: <Users /> },
-    { path: 'learning', element: <LearningLab /> }
+    { path: 'dashboard', element: <RequireRole role="VIEWER"><Dashboard /></RequireRole> },
+    { path: 'orders', element: <RequireRole role="VIEWER"><Orders /></RequireRole> },
+    { path: 'orders/new', element: <RequireRole role="USER"><OrderForm /></RequireRole> },
+    { path: 'orders/:id', element: <RequireRole role="VIEWER"><OrderDetail /></RequireRole> },
+    { path: 'orders/:id/edit', element: <RequireRole role="USER"><OrderForm /></RequireRole> },
+    { path: 'settings/oidc', element: <RequireRole role="ADMIN"><OidcSettings /></RequireRole> },
+    { path: 'settings/smtp', element: <RequireRole role="ADMIN"><SmtpSettings /></RequireRole> },
+    { path: 'users', element: <RequireRole role="ADMIN"><Users /></RequireRole> },
+    { path: 'external-users', element: <RequireRole role="ADMIN"><ExternalUsers /></RequireRole> },
+    { path: 'learning', element: <RequireRole role="VIEWER"><LearningLab /></RequireRole> }
   ] }
 ]);
 

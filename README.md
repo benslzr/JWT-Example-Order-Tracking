@@ -10,6 +10,7 @@ This is a simple full-stack TypeScript learning application for understanding:
 - React Bearer token API calls
 - SQLite persistence with Prisma
 - SMTP testing and customer order update email with Nodemailer
+- ADMIN management of local users and tracked external/OIDC users
 
 This project is intentionally educational and not production-ready.
 
@@ -65,6 +66,8 @@ ID tokens describe the authenticated user for the client. Access tokens are inte
 - `VIEWER`: view orders only
 
 Keycloak users map to roles from `realm_access.roles` or `groups`. Local users store their role in SQLite.
+
+OIDC users are tracked in the `ExternalUser` table after the API successfully validates a Keycloak token. ADMIN users can search those tracked users, edit their application role/profile fields, or delete the local tracking record. Deleting an external user record does not delete the user from Keycloak; the record can be recreated on that user's next successful OIDC login.
 
 ## Backend Setup
 
