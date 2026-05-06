@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+  VIEWER
+}
+
+enum OrderStatus {
+  NEW
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  COMPLETED
+  CANCELLED
+}
+
+model LocalUser {
+  id           String          @id @default(cuid())
+  username     String          @unique
+  email        String?
+  passwordHash String
+  role         Role            @default(VIEWER)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  assigned     CustomerOrder[] @relation("AssignedOrders")
+  notes        OrderNote[]
+}
+
+model OidcSettings {
+  id                    Int      @id @default(1)
+  issuerUrl             String
+  authorizationEndpoint String
+  tokenEndpoint         String
+  jwksEndpoint          String
+  clientId              String
+  clientSecret          String?
+  redirectUri           String
+  postLogoutRedirectUri String
+  scopes                String   @default("openid profile email")
+  updatedAt             DateTime @updatedAt
+}
+
+model SmtpSettings {
+  id              Int      @id @default(1)
+  host            String
+  port            Int
+  secure          Boolean  @default(false)
+  username        String?
+  password        String?
+  fromEmail       String
+  fromDisplayName String
+  updatedAt       DateTime @updatedAt
+}
+
+model CustomerOrder {
+  id             String      @id @default(cuid())
+  customerName   String
+  customerEmail  String
+  websitePackage String
+  status         OrderStatus @default(NEW)
+  description    String
+  assignedUserId String?
+  assignedUser   LocalUser?  @relation("AssignedOrders", fields: [assignedUserId], references: [id])
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  notes          OrderNote[]
+  emailLogs      EmailLog[]
+}
+
+model OrderNote {
+  id        String        @id @default(cuid())
+  orderId   String
+  order     CustomerOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    LocalUser?    @relation(fields: [authorId], references: [id])
+  body      String
+  createdAt DateTime      @default(now())
+}
+
+model EmailLog {
+  id        String        @id @default(cuid())
+  orderId   String?
+  order     CustomerOrder? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  toEmail   String
+  subject   String
+  success   Boolean
+  response  String?
+  error     String?
+  createdAt DateTime      @default(now())
+}

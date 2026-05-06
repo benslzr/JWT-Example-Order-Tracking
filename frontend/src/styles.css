@@ -1,0 +1,27 @@
+:root { color: #1f2937; background: #f7f8fb; font-family: Inter, system-ui, Segoe UI, sans-serif; }
+body { margin: 0; }
+a { color: #0f766e; text-decoration: none; font-weight: 650; }
+button, .button { align-items: center; background: #0f766e; border: 0; border-radius: 6px; color: white; cursor: pointer; display: inline-flex; gap: 8px; font-weight: 700; margin: 6px 8px 6px 0; padding: 10px 14px; }
+input, select, textarea { border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font: inherit; padding: 10px; width: 100%; }
+textarea { min-height: 110px; }
+pre { background: #111827; border-radius: 6px; color: #d1fae5; overflow: auto; padding: 14px; white-space: pre-wrap; }
+.shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+aside { background: #ffffff; border-right: 1px solid #e5e7eb; padding: 24px; }
+aside h1 { font-size: 22px; margin: 0 0 24px; }
+aside a { display: block; margin: 14px 0; }
+main { padding: 0 32px 40px; }
+header { align-items: center; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; margin-bottom: 28px; min-height: 68px; }
+header div { align-items: center; display: flex; gap: 8px; }
+section { max-width: 1120px; }
+.grid2 { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.panel, .stat, .note { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px; }
+.form { display: grid; gap: 12px; max-width: 720px; }
+.inline { align-items: center; display: flex; gap: 10px; max-width: 720px; }
+.check { align-items: center; display: flex; gap: 10px; }
+.check input { width: auto; }
+.stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.stat strong { display: block; font-size: 30px; }
+table { background: white; border-collapse: collapse; width: 100%; }
+th, td { border-bottom: 1px solid #e5e7eb; padding: 12px; text-align: left; }
+.error { color: #b91c1c; }
+@media (max-width: 800px) { .shell, .grid2 { grid-template-columns: 1fr; } aside { border-right: 0; border-bottom: 1px solid #e5e7eb; } main { padding: 0 18px 32px; } }
